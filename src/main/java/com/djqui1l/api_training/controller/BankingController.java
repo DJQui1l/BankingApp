@@ -31,12 +31,12 @@ public class BankingController {
     }
 
 
-    @PutMapping("/update")
-    public ResponseEntity<BankingUser> updateBankingUser(@RequestBody BankingUser user){
+    @PutMapping("/{userId}")
+    public ResponseEntity<BankingUser> updateBankingUser(@RequestBody BankingUser user, @PathVariable String userId){
 
-        if (bankingUserService.updateBankingUser(user) != null) {
-            BankingUser updatedUser = bankingUserService.updateBankingUser(user);
-            return new ResponseEntity<>(updatedUser, HttpStatus.CREATED);
+        BankingUser updatedUser = bankingUserService.updateBankingUser(userId, user);
+        if (updatedUser != null) {
+            return ResponseEntity.ok(updatedUser);
         } else{
             return ResponseEntity.notFound().build();
 

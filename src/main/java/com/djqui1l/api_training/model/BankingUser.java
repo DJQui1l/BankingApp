@@ -1,10 +1,15 @@
 package com.djqui1l.api_training.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
 import java.math.BigDecimal;
 
+@Entity
 public class BankingUser {
 
+    @Id
     private String id;
     private String firstName;
     private String lastName;
@@ -51,10 +56,14 @@ public class BankingUser {
         this.lastName = lastName;
     }
     // ==============================
+    public String getEmail() { return email; }
+    public void setEmail(String email) {this.email = email; }
+    // ==============================
     public Double getBalance(){
         return balance;
     }
-
+    public void setBalance(Double balance) { this.balance = balance;}
+    // ==============================
     public void withdraw(Double amount) {
         this.balance -= amount;
     }

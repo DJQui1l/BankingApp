@@ -1,49 +1,60 @@
 package com.djqui1l.api_training.service;
 
 import com.djqui1l.api_training.model.BankingUser;
+import com.djqui1l.api_training.repository.BankingUserRepository;
 import org.springframework.stereotype.Service;
+
 
 import java.util.UUID;
 @Service
 public class BankingUserService {
 
-    public BankingUser bankingUser;
+//    public BankingUser bankingUser;
 
-    public BankingUser createBankingUser(BankingUser user){
+    private final BankingUserRepository bankingUserRepository;
+
+    public BankingUserService(BankingUserRepository bankingUserRepository) {
+        this.bankingUserRepository = bankingUserRepository;
+    }
+
+
+    public BankingUser createBankingUser(BankingUser user) {
         user.setId(UUID.randomUUID().toString());
-        this.bankingUser = user;
-        return this.bankingUser;
+
+        String firstName = user.getFirstName().toLowerCase();
+        String lastName = user.getLastName().toLowerCase();
+        String email = firstName + "." + lastName + "@banking.com";
+        user.setEmail(email);
+        return bankingUserRepository.save(user);
 
 
     }
 
-    public BankingUser getBankingUser(String userId){
-        if (userId.equals(this.bankingUser.getId())){
-            return this.bankingUser;
-        } else {
-            return null;
-        }
+    public BankingUser getBankingUser(String userId) {
+        return bankingUserRepository.findById(userId).orElse(null);
     }
 
-    public BankingUser updateBankingUser(BankingUser user){
-        if (user.getId().equals(this.bankingUser.getId())){
-            this.bankingUser = user;
-            return this.bankingUser;
-        } else {
-            return null;
-        }
+    public BankingUser updateBankingUser(String userId, BankingUser user) {
+        return bankingUserRepository.findById(userId)
+                .map(existingUser -> {
+                    existingUser.setFirstName(user.getFirstName());
+                    existingUser.setLastName(user.getLastName());
+                    existingUser.setEmail(user.getEmail());
+                    existingUser.setBalance(user.getBalance());
+                    return bankingUserRepository.save(existingUser);
+                })
+                .orElse(null);
+
     }
 
-    public Boolean deleteBankingUser(String userId){
-        if (userId.equals(this.bankingUser.getId())){
-            this.bankingUser = null;
+
+    public boolean deleteBankingUser(String userId) {
+        if (bankingUserRepository.existsById(userId)) {
+            bankingUserRepository.deleteById(userId);
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
-
-
-
 
 }
+
