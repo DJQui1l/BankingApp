@@ -1,12 +1,11 @@
 package com.djqui1l.api_training.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 
-import java.math.BigDecimal;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
+
+@Document(collection = "banking_users")
 public class BankingUser {
 
     @Id
